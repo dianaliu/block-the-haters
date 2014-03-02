@@ -1,23 +1,31 @@
-<html>
-<head>
-  <title>Block the Haters</title>
-</head>
-<body>
+<div>
+  <h1>Haters to the left.</h1>
+  <p>Share your blocked list with your twitter crew for a saner timeline.</p>
+</div>
 
-  <div>
-    <h1>Haters to the left.</h1>
-    <p>Share your blocked list with your twitter crew for a saner timeline.</p>
-
-    <br />
-
-  <% if current_user %>
-    <p><%= "@#{twitter_name}" %> is signed in....</p>
-    <a href="blocks">Get your block list</a>
+<div>
+  <% if !current_user %>
+  <a href='/auth/twitter'>Sign in with Twitter to get started</a>
   <% else %>
-    <a href='/auth/twitter'>Sign in with Twitter</a>
+  <h2>Hello <%= "@#{twitter_name}" %>.</h2>
+  <p><a href="/blocks">View your block list*</a></p>
+  <p>or</p>
+  <p>Upload a list of users to block. Ask a friend to use this site to generate a list of their blocked users and share it with you. Or make your own. It needs to be a json file formatted like below. screen_name or user_id is required.</p>
+  <code>
+    [ {
+    screen_name: "dianagliu",
+    user_id: 1234567890
+    } ]
+  </code>
+
+  <form action='/upload' method='post' enctype='multipart/form-data'>
+    <input type="file" accept='application/json' name='file'>
+    <input type="submit">
+  </form>
+
+  <p>
+    <small>*this may take a while to load depending on the size of your block list</small>
+  </p>
   <% end %>
-  </div>
+</div>
 
-
-</body>
-</html>

@@ -36,7 +36,7 @@ get '/auth/failure' do
 end
 
 get '/' do
-  erb :index, locals: { :twitter_name => session[:name]}
+  erb :index, :layout => :app_layout, locals: { :twitter_name => session[:name]}
 end
 
 get '/blocks' do
@@ -46,6 +46,17 @@ end
 get '/export.json' do
   content_type :json
   get_blocked_users.to_json
+end
+
+post '/upload' do
+  # TODO: Check for invalid files and formats
+  block_list = JSON.parse(params[:file][:tempfile].read, :symbolize_names => true)
+  erb :block_form, :layout => :app_layout, locals: { :block_list => block_list }
+end
+
+post '/block_users' do
+
+  'okay, blocked'
 end
 
 private
@@ -64,4 +75,9 @@ def get_blocked_users
     blocked_users.each { |u|  list << { :screen_name => u.screen_name, :user_id => u.id } }
   end
 end
+
+def get_your_following
+  # TODO: Don't block anybody you're following
+end
+
 
