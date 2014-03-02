@@ -2,13 +2,22 @@
 <head>
   <title>Block the Haters</title>
 </head>
-  <body>
+<body>
 
   <div>
     <h1>Haters to the left.</h1>
     <p>Share your blocked list with your twitter crew for a saner timeline.</p>
+
+    <br />
+
+  <% if current_user %>
+    <p><%= "@#{twitter_name}" %> is signed in....</p>
+    <a href="blocks">Get your block list</a>
+  <% else %>
+    <a href='/auth/twitter'>Sign in with Twitter</a>
+  <% end %>
   </div>
 
 
-  </body>
+</body>
 </html>
