@@ -55,6 +55,9 @@ post '/upload' do
 end
 
 post '/block_users' do
+  # Only receive those checked users screen_names or user_ids
+  users = params.values
+  block_users(users)
 
   'okay, blocked'
 end
@@ -74,6 +77,18 @@ def get_blocked_users
   formatted_blocked_users = [].tap do |list|
     blocked_users.each { |u|  list << { :screen_name => u.screen_name, :user_id => u.id } }
   end
+end
+
+def block_users(users=[])
+  client = Twitter::REST::Client.new({
+    :consumer_key => ENV['TWITTER_CONSUMER_KEY'],
+    :consumer_secret => ENV['TWITTER_CONSUMER_SECRET'],
+    :access_token => session[:access_token],
+    :access_token_secret => session[:access_token_secret]
+  })
+
+  # Can receive a mixed array of screen_names and user_ids
+  client.block users
 end
 
 def get_your_following
