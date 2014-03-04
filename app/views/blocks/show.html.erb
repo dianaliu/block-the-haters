@@ -1,0 +1,9 @@
+<div class="row">
+  <h1>You have blocked <%= @list.count %> users.</h1>
+  <a href="/blocks/export">Export them so other people can block them too.</a>
+  <ul>
+    <% @list.each do |u| %>
+      <li><%= u[:screen_name] %>, <%= u[:user_id] %></li>
+    <% end %>
+  </ul>
+</div>

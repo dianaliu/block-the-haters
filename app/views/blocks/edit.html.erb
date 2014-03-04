@@ -1,0 +1,8 @@
+<%= form_tag blocks_path, :method => :put do %>
+  <% @list.each_with_index do |u, i| %>
+  <%= check_box_tag "user[#{i}]", u[:screen_name] || u[:user_id], true %>
+  <%= u[:screen_name] || u[:user_id] %>
+  <br />
+  <% end %>
+  <%= submit_tag 'Block these users' %>
+<% end %>

@@ -34,3 +34,12 @@ config/initializers/secret_token.rb
 *.swp
 *.rbc
 /pkg
+
+# Ignore config file
+/config/initializers/environment_variables.rb
+
+# Ignore coveralls generated files
+/coverage
+
+# Ignore OS files
+.DS_Store

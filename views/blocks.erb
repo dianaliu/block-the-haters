@@ -1,7 +1,0 @@
-<h1>Here are the users you have blocked</h1>
-<a href="export.json">Export them so other people can block them too.</a>
-<ul>
-  <% block_list.each do |u| %>
-    <li><%= u[:screen_name] %>, <%= u[:user_id] %></li>
-  <% end %>
-</ul>

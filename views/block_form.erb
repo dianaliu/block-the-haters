@@ -1,7 +1,0 @@
-<form action="/block_users"method='post'>
-  <% block_list.each_with_index do |u, i| %>
-  <input type="checkbox" checked name="user<%= i %>" value=<%= u[:screen_name] || u[:user_id] %> ><%= u[:screen_name] || u[:user_id] %>
-  <br />
-  <% end %>
-  <input type="submit" value="Block these users">
-</form>
