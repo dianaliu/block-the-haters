@@ -1,4 +1,4 @@
-<h1>Here are the users you have blocked</h1>
+<h1>You have blocked <%= block_list.count %> users.</h1>
 <a href="export.json">Export them so other people can block them too.</a>
 <ul>
   <% block_list.each do |u| %>

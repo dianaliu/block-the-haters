@@ -1,11 +1,14 @@
 require 'sinatra'
+require 'sinatra/assetpack'
 require 'omniauth-twitter'
 require 'twitter'
 require 'json'
 
+
+register Sinatra::AssetPack
+
 configure do
   enable :sessions
-
   use OmniAuth::Builder do
     provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
   end
