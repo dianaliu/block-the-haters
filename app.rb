@@ -1,11 +1,32 @@
 require 'sinatra'
+require 'sinatra/config_file'
+require 'omniauth-twitter'
 require 'twitter'
 require 'json'
 
+
 class App < Sinatra::Base
-  get '/' do
-    @title = 'Block the Haters'
-    erb :index
+  configure do
+    enable :sessions
+    register Sinatra::ConfigFile
+    config_file 'config.yml'
+
+    use OmniAuth::Builder do
+      provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
+    end
+  end
+
+  configure :development, :testing do
+    set :session_secret, "~session-secret~"
+    ENV['TWITTER_CONSUMER_KEY'] = settings.TWITTER_CONSUMER_KEY
+    ENV['TWITTER_CONSUMER_SECRET'] = settings.TWITTER_CONSUMER_SECRET
+  end
+
+  helpers do
+    # define a current_user method, so we can be sure if an user is authenticated
+    def current_user
+      !session[:uid].nil?
+    end
   end
 
   get '/auth/twitter/callback' do
@@ -19,12 +40,16 @@ class App < Sinatra::Base
     redirect to('/')
   end
 
+  get 'auth/failure' do
+    "authentication failed"
+  end
+
   get '/' do
-    erb :index, :layout => :layout, locals: { :twitter_name => session[:name]}
+    erb :index, locals: { :twitter_name => session[:name]}
   end
 
   get '/blocks' do
-    erb :blocks, :layout => :layout, locals: { :block_list => get_blocked_users }
+    erb :blocks, locals: { :block_list => get_blocked_users }
   end
 
   get '/export.json' do
@@ -35,7 +60,7 @@ class App < Sinatra::Base
   post '/upload' do
     # TODO: Check for invalid files and formats
     block_list = JSON.parse(params[:file][:tempfile].read, :symbolize_names => true)
-    erb :block_form, :layout => :layout, locals: { :block_list => block_list }
+    erb :block_form, locals: { :block_list => block_list }
   end
 
   post '/block_users' do
@@ -44,23 +69,6 @@ class App < Sinatra::Base
     block_users(users)
 
     'okay, blocked'
-  end
-
-
-  get '/*' do |page|
-    begin
-      erb page.to_sym
-    rescue Errno::ENOENT
-      raise Sinatra::NotFound
-    end
-  end
-
-
-  helpers do
-    # define a current_user method, so we can be sure if an user is authenticated
-    def current_user
-      !session[:uid].nil?
-    end
   end
 
   private

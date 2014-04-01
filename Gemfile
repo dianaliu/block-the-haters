@@ -1,10 +1,14 @@
 source "https://rubygems.org"
 
 gem 'sinatra'
-gem 'haml'
-gem 'sass'
+
+# Use config.yml file
+gem 'sinatra-contrib'
+
 gem 'sprockets'
 gem 'sprockets-helpers'
+
+gem 'sass'
 gem 'zurb-foundation', '~> 4.1.0'
 
 # Log in with twitter
