@@ -1,37 +1,11 @@
-require 'sinatra/base'
-require 'sinatra/assetpack'
-require 'omniauth-twitter'
+require 'sinatra'
 require 'twitter'
 require 'json'
 
-class BlockTheHaters < Sinatra::Base
-  set :root, File.dirname(__FILE__)
-  register Sinatra::AssetPack
-
-  assets do
-
-    serve '/css', :from => 'css'
-    css :foundation, [
-      '/css/normalize.css',
-      '/css/foundation.min.css'
-    ]
-
-    prebuild true
-  end
-
-  configure do
-    enable :sessions
-
-    use OmniAuth::Builder do
-      provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
-    end
-  end
-
-  helpers do
-    # define a current_user method, so we can be sure if an user is authenticated
-    def current_user
-      !session[:uid].nil?
-    end
+class App < Sinatra::Base
+  get '/' do
+    @title = 'Block the Haters'
+    erb :index
   end
 
   get '/auth/twitter/callback' do
@@ -45,18 +19,12 @@ class BlockTheHaters < Sinatra::Base
     redirect to('/')
   end
 
-  get '/auth/failure' do
-    # omniauth redirects to /auth/failure when it encounters a problem
-    # so you can implement this as you please
-    "twitter omni-auth failed."
-  end
-
   get '/' do
-    erb :index, :layout => :app_layout, locals: { :twitter_name => session[:name]}
+    erb :index, :layout => :layout, locals: { :twitter_name => session[:name]}
   end
 
   get '/blocks' do
-    erb :blocks, :layout => :app_layout, locals: { :block_list => get_blocked_users }
+    erb :blocks, :layout => :layout, locals: { :block_list => get_blocked_users }
   end
 
   get '/export.json' do
@@ -67,7 +35,7 @@ class BlockTheHaters < Sinatra::Base
   post '/upload' do
     # TODO: Check for invalid files and formats
     block_list = JSON.parse(params[:file][:tempfile].read, :symbolize_names => true)
-    erb :block_form, :layout => :app_layout, locals: { :block_list => block_list }
+    erb :block_form, :layout => :layout, locals: { :block_list => block_list }
   end
 
   post '/block_users' do
@@ -76,6 +44,23 @@ class BlockTheHaters < Sinatra::Base
     block_users(users)
 
     'okay, blocked'
+  end
+
+
+  get '/*' do |page|
+    begin
+      erb page.to_sym
+    rescue Errno::ENOENT
+      raise Sinatra::NotFound
+    end
+  end
+
+
+  helpers do
+    # define a current_user method, so we can be sure if an user is authenticated
+    def current_user
+      !session[:uid].nil?
+    end
   end
 
   private
@@ -110,6 +95,4 @@ class BlockTheHaters < Sinatra::Base
   def get_your_following
     # TODO: Don't block anybody you're following
   end
-
-  run! if app_file == $0
 end
