@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 require 'sprockets'
-require './environment'
 require './app'
 
 map '/assets' do

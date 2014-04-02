@@ -48,6 +48,10 @@ class App < Sinatra::Base
     erb :index, locals: { :twitter_name => session[:name]}
   end
 
+  get '/about' do
+    erb :about
+  end
+
   get '/blocks' do
     erb :blocks, locals: { :block_list => get_blocked_users }
   end

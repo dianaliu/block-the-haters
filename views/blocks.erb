@@ -1,7 +1,27 @@
-<h1>You have blocked <%= block_list.count %> users.</h1>
-<a href="export.json">Export them so other people can block them too.</a>
-<ul>
-  <% block_list.each do |u| %>
-    <li><%= u[:screen_name] %>, <%= u[:user_id] %></li>
-  <% end %>
-</ul>
+<div class="panel">
+  <h4>You have blocked <%= block_list.count %> users.</h4>
+  <p>
+    Save a copy for yourself.
+    Share a copy with your friend.
+  </p>
+  <p>
+    <a href="export.json" class="button">Save or Share</a>
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>User ID</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% block_list.each do |u| %>
+      <tr>
+        <td><%= u[:screen_name] %></td>
+        <td><%= u[:user_id] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
