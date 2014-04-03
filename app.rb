@@ -57,8 +57,16 @@ class App < Sinatra::Base
   end
 
   get '/export.json' do
-    content_type :json
-    get_blocked_users.to_json
+    # content_type :json
+    temp = Tempfile.new("blocks")
+    begin
+      temp.write(JSON.pretty_generate(get_blocked_users))
+      send_file(File.absolute_path(temp), :type => 'application/json', :disposition => 'attachment', :filename => "#{session[:name]}-blocks.json")
+    ensure
+      # Will be GC'd but clean up anyways
+      temp.close
+      temp.unlink
+    end
   end
 
   post '/upload' do
