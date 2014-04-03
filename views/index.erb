@@ -1,31 +1,47 @@
 <div class="panel">
-  <h1>Haters to the left.</h1>
-  <p>Share your blocked list with your twitter crew for a saner timeline.</p>
-</div>
-
-<div>
   <% if !current_user %>
-  <a href='/auth/twitter'>Sign in with Twitter to get started</a>
+    <h4>Block the Haters</h4>
+    <p>Share your block list among twitter friends for a safer timeline.</p>
+    <p><i class="fi-social-twitter"></i> <a href='/auth/twitter'>Sign in with Twitter to get started</a></p>
   <% else %>
-  <h2>Hello <%= "@#{twitter_name}" %>.</h2>
-  <p><a href="/blocks">View your block list*</a></p>
-  <p>or</p>
-  <p>Upload a list of users to block. Ask a friend to use this site to generate a list of their blocked users and share it with you. Or make your own. It needs to be a json file formatted like below. screen_name or user_id is required.</p>
-  <code>
-    [ {
-    screen_name: "dianagliu",
-    user_id: 1234567890
-    } ]
-  </code>
 
-  <form action='/upload' method='post' enctype='multipart/form-data'>
-    <input type="file" accept='application/json' name='file'>
-    <input type="submit">
-  </form>
+  <h2 class="text-center"><small>Hello <%= "@#{twitter_name}" %>.</small></h2>
+  <hr>
 
-  <p>
-    <small>*this may take a while to load depending on the size of your block list</small>
-  </p>
+  <div class="row">
+    <div class="small-6 columns text-center">
+      <h4>See who you've blocked.</h4>
+      <h4>Share blocks with friends.</h4>
+      <p>
+        <a href="/blocks" class="button">See and share</a>
+        <br />
+        (This may take a while to load.)
+      </p>
+    </div>
+
+    <div class="small-6 columns border-left">
+      <h4 class="text-center">Upload and block</h4>
+      <form action='/upload' method='post' enctype='multipart/form-data' class="text-center">
+        <input type="file" accept='application/json' name='file'>
+        <input type="submit" class="button">
+      </form>
+
+      <p>Ask a friend to use this site to generate a list of their blocked users and share it with you.</p>
+      <p>Then, upload it here to block the same users. You can review the list before blocking.</p>
+<!--       <p>Or make your own. It needs to be a json file formatted like below. screen_name or user_id is required.</p>
+
+      <div class="panel">
+        <code>
+          [ {
+          screen_name: "dianagliu",
+          user_id: 1234567890
+          } ]
+        </code>
+      </div> -->
+    </div>
+  </div>
   <% end %>
 </div>
+
+
 
